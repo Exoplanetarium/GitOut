@@ -66,5 +66,28 @@ public class git {
         return hashed;
     }
 
+    public static void createBLOB(String fileName) {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String fileContents = sb.toString();
+        String hashed = hashFile(fileContents);
+        try {
+            File save = new File("objects", hashed);
+            save.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(hashed))) {
+            writer.write(fileContents);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
-
