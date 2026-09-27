@@ -32,9 +32,9 @@ public class git {
         }
 
         try {
-            File INDEX = new File(git, "INDEX");
-            if (!INDEX.exists()) {
-                INDEX.createNewFile();
+            File index = new File(git, "index");
+            if (!index.exists()) {
+                index.createNewFile();
             } else {
                 num++;
             }
@@ -70,22 +70,70 @@ public class git {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
+            boolean firstLine = true;
             while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
+                if (!firstLine) {
+                    sb.append("\n");
+                }
+                sb.append(line);
+                firstLine = false;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         String fileContents = sb.toString();
         String hashed = hashFile(fileContents);
+        File save = new File("git/objects", hashed);
         try {
-            File save = new File("objects", hashed);
             save.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(hashed))) {
             writer.write(fileContents);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateIndex(String fileName) {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            boolean firstLine = true;
+            while ((line = reader.readLine()) != null) {
+                if (!firstLine) {
+                    sb.append("\n");
+                }
+                sb.append(line);
+                firstLine = false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String fileContents = sb.toString();
+        String hashed = hashFile(fileContents);
+        File index = new File("git", "index");
+        StringBuilder indexContents = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(index))) {
+            String line;
+            boolean firstLine = true;
+            while ((line = reader.readLine()) != null) {
+                if (!firstLine) {
+                    indexContents.append("\n");
+                }
+                indexContents.append(line);
+                firstLine = false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (indexContents.length() > 0) {
+            indexContents.append("\n");
+        }
+        indexContents.append(hashed + " " + fileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(index))) {
+            writer.write(indexContents.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

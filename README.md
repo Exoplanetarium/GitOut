@@ -1,2 +1,4 @@
 init
 hashFile
+createBLOB
+updateIndex
