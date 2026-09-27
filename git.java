@@ -13,10 +13,6 @@ public class git {
         if (args.length > 0 && args[0].equals("init")) {
             init();
         }
-        if (args.length > 0 && args[0].equals("test")) {
-            createBLOB("text.txt");
-            updateIndex("text.txt");
-        }
     }
 
     public static void init() {
