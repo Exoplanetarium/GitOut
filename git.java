@@ -13,6 +13,10 @@ public class git {
         if (args.length > 0 && args[0].equals("init")) {
             init();
         }
+        if (args.length > 0 && args[0].equals("test")) {
+            createBLOB("text.txt");
+            updateIndex("text.txt");
+        }
     }
 
     public static void init() {
@@ -89,7 +93,7 @@ public class git {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(hashed))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(save))) {
             writer.write(fileContents);
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,11 +123,13 @@ public class git {
             String line;
             boolean firstLine = true;
             while ((line = reader.readLine()) != null) {
-                if (!firstLine) {
-                    indexContents.append("\n");
+                if (!line.endsWith(" " + fileName)) {
+                    if (!firstLine) {
+                        indexContents.append("\n");
+                    }
+                    indexContents.append(line);
+                    firstLine = false;
                 }
-                indexContents.append(line);
-                firstLine = false;
             }
         } catch (IOException e) {
             e.printStackTrace();
