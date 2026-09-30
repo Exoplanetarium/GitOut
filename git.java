@@ -13,22 +13,23 @@ public class git {
         if (args.length > 0 && args[0].equals("init")) {
             init();
         }
+        
     }
 
     public static void init() {
-        int num = 0;
+        int fileExistsCounter = 0;
         File git = new File("git");
         if (!git.exists()) {
             git.mkdir();
         } else {
-            num++;
+            fileExistsCounter++;
         }
 
         File objects = new File(git, "objects");
         if (!objects.exists()) {
             objects.mkdir();
         } else {
-            num++;
+            fileExistsCounter++;
         }
 
         try {
@@ -36,7 +37,7 @@ public class git {
             if (!index.exists()) {
                 index.createNewFile();
             } else {
-                num++;
+                fileExistsCounter++;
             }
         } catch (IOException e) {
             System.out.println("error");
@@ -48,13 +49,13 @@ public class git {
             if (!HEAD.exists()) {
                 HEAD.createNewFile();
             } else {
-                num++;
+                fileExistsCounter++;
             }
         } catch (IOException e) {
             System.out.println("error");
             e.printStackTrace();
         }
-        if (num == 4) {
+        if (fileExistsCounter == 4) {
             System.out.println("Git Repository Already Exists");
         } else {
             System.out.println("Git Repository Created");
