@@ -141,4 +141,42 @@ public class git {
             e.printStackTrace();
         }
     }
+
+    public static String createTree(String dirPath) {
+        File tree = new File("git/objects/toBeReplacedByHash");
+        try {
+            StringBuilder sb = new StringBuilder();
+            File dir = new File(dirPath);
+            File[] fileArr = dir.listFiles();
+            for (File file : fileArr) {
+                if (file.isDirectory()) {
+                    createTree(file.getPath());
+                    if (!sb.isEmpty()) {
+                        sb.append("\n");
+                    }
+
+                    sb.append("tree " + hashFile(file.getPath()) + " " + file.getPath());
+                } else {
+                    createBLOB(file.getPath());
+                    if (!sb.isEmpty()) {
+                        sb.append("\n");
+                    }
+
+                    sb.append("blob " + hashFile(file.getPath()) + " " + file.getPath());
+                }
+            }
+
+            // read tree hash
+            FileWriter wr = new FileWriter(tree);
+            String fileContents = sb.toString();
+            wr.write(fileContents);
+            wr.close();
+            tree.renameTo(new File("git/objects/" + hashFile(fileContents)));
+            return hashFile(fileContents);
+
+        } catch (IOException e) {
+            return "";
+        }
+        
+    }
 }
