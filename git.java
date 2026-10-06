@@ -143,40 +143,46 @@ public class git {
     }
 
     public static String createTree(String dirPath) {
-        File tree = new File("git/objects/toBeReplacedByHash");
         try {
-            StringBuilder sb = new StringBuilder();
             File dir = new File(dirPath);
-            File[] fileArr = dir.listFiles();
-            for (File file : fileArr) {
-                if (file.isDirectory()) {
-                    createTree(file.getPath());
-                    if (!sb.isEmpty()) {
-                        sb.append("\n");
-                    }
-
-                    sb.append("tree " + hashFile(file.getPath()) + " " + file.getPath());
-                } else {
-                    createBLOB(file.getPath());
-                    if (!sb.isEmpty()) {
-                        sb.append("\n");
-                    }
-
-                    sb.append("blob " + hashFile(file.getPath()) + " " + file.getPath());
-                }
-            }
+            StringBuilder treeString = new StringBuilder();
+            treeString = createTreeHelper(dir, treeString);
 
             // read tree hash
+            File tree = new File("git/objects/" + hashFile(treeString.toString()));
             FileWriter wr = new FileWriter(tree);
-            String fileContents = sb.toString();
-            wr.write(fileContents);
+            wr.write(treeString.toString());
             wr.close();
-            tree.renameTo(new File("git/objects/" + hashFile(fileContents)));
-            return hashFile(fileContents);
+            tree.createNewFile();
+            return hashFile(treeString.toString());
 
         } catch (IOException e) {
             return "";
         }
         
+    }
+
+    public static StringBuilder createTreeHelper(File dir, StringBuilder treeString) throws IOException {            
+        StringBuilder sb = new StringBuilder();
+        File[] fileArr = dir.listFiles();
+        for (File file : fileArr) {
+            if (file.isDirectory()) {
+                treeString.append(createTreeHelper(file, treeString));
+                if (!sb.isEmpty()) {
+                    sb.append("\n");
+                }
+
+                sb.append("tree " + hashFile(file.getPath()) + " " + file.getPath());
+            } else {
+                createBLOB(file.getPath());
+                if (!sb.isEmpty()) {
+                    sb.append("\n");
+                }
+
+                sb.append("blob " + hashFile(file.getPath()) + " " + file.getPath());
+            }
+        }
+
+        return sb;
     }
 }

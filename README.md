@@ -2,3 +2,4 @@ init
 hashFile
 createBLOB
 updateIndex
+createTree, createTreeHelper
