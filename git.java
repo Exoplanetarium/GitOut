@@ -232,19 +232,15 @@ public class git {
 
             ArrayList<ArrayList<String>> finalTree = createTreeFromIndexHelper(workingList);
             StringBuilder rootStr = new StringBuilder();
-            FileWriter wr = new FileWriter("git/index");
             boolean firstLine = true;
             for (String treePart : finalTree.get(0)) {
                 if (!firstLine) {
                     rootStr.append(" ");
-                    wr.write(" ");
                 }
                 rootStr.append(treePart);
-                wr.write(treePart);
                 firstLine = false;
             }
 
-            wr.close();
             return hashFile(rootStr.toString());
         } catch(IOException e) {
             return "";
