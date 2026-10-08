@@ -3,3 +3,4 @@ hashFile
 createBLOB
 updateIndex
 createTree, createTreeHelper
+createTreeFromIndex, createTreeFromIndexHelper, pathSorter
