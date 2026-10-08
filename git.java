@@ -175,7 +175,7 @@ public class git {
                     sb.append("\n");
                 }
 
-                sb.append("tree " + hashFile(dirContents.toString()) + " " + file.getPath());
+                sb.append("tree " + hashFile(dirContents.toString()) + " " + file.getName());
             } else {
                 createBLOB(file.getPath());
                 if (!sb.isEmpty()) {
@@ -196,7 +196,7 @@ public class git {
                 reader.close();
                 String fileContents = contents.toString();
                 String hashed = hashFile(fileContents);
-                sb.append("blob " + hashed + " " + file.getPath());
+                sb.append("blob " + hashed + " " + file.getName());
             }
         }
 
