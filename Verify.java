@@ -1,5 +1,7 @@
+import java.io.IOException;
+
 public class Verify {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException{
         git.init();
         git.createBLOB("f0/f1/text.txt");
         git.createBLOB("f0/text2.txt");
